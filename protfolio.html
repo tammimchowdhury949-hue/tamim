@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tamim Chowdhury | Premium graphic-design</title>
+    <meta name="description" content="Portfolio of Tamim Chowdhury, WordPress & Laravel Developer">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Tailwind CSS (via CDN for single file structure) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#46f0df',
+                        dark: '#0a0a0a',
+                        darker: '#050505',
+                        glass: 'rgba(255, 255, 255, 0.03)',
+                        glassBorder: 'rgba(255, 255, 255, 0.08)'
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        heading: ['Space Grotesk', 'sans-serif'],
+                    },
+                    animation: {
+                        'blob': 'blob 7s infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        blob: {
+                            '0%': { transform: 'translate(0px, 0px) scale(1)' },
+                            '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
+                            '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
+                            '100%': { transform: 'translate(0px, 0px) scale(1)' }
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Styles & Effects */
+        body {
+            background-color: #050505;
+            color: #e5e5e5;
+            overflow-x: hidden;
+        }
+
+        /* Glassmorphism Utilities */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .glass-nav {
+            background: rgba(10, 10, 10, 0.7);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Gradient Text */
+        .text-gradient {
+            background: linear-gradient(135deg, #ffffff 0%, #46f0df 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Smooth Image Scroll Effect for Portfolio */
+        .portfolio-img-wrapper {
+            position: relative;
+            width: 100%;
+            height: 260px; /* Fixed height for the card */
+            overflow: hidden;
+            border-radius: 0.75rem;
+        }
+
+        .portfolio-img-scroll {
+            width: 100%;
+            height: auto;
+            position: absolute;
+            top: 0;
+            left: 0;
+            transition: transform 4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .portfolio-card:hover .portfolio-img-scroll {
+            transform: translateY(calc(-100% + 260px));
+        }
+
+        /* Hover Glow Effects */
+        .hover-glow {
+            transition: all 0.4s ease;
+        }
+        .hover-glow:hover {
+            box-shadow: 0 0 25px rgba(70, 240, 223, 0.2);
+            border-color: rgba(70, 240, 223, 0.4);
+            transform: translateY(-5px);
+        }
+
+        /* Pop up animation for buttons */
+        @keyframes popup-btn {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        .btn-popup-hover:hover {
+            animation: popup-btn 0.5s ease-in-out infinite;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #050505;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #222;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #46f0df;
+        }
+
+        /* Scroll Reveal Initial States */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Modal Styles */
+        .modal-open {
+            overflow: hidden;
+        }
+        .skill-modal-overlay {
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease-in-out;
+            backdrop-filter: blur(5px);
+        }
+        .skill-modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        .skill-modal-content {
+            opacity: 0;
+            transform: scale(0.95) translateY(20px);
+            transition: all 0.4s cubic-bezier(0.5, 0, 0, 1);
+        }
+        .skill-modal-overlay.active .skill-modal-content {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+        }
+    </style>
+</head>
+<body class="antialiased relative">
+
+    <!-- Background Ambient Blobs -->
+    <div class="fixed inset-0 z-[-1] overflow-hidden pointer-events-none">
+        <div class="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-primary/20 rounded-full mix-blend-screen filter blur-[120px] animate-blob"></div>
+        <div class="absolute top-[40%] right-[-10%] w-[400px] h-[400px] bg-blue-500/10 rounded-full mix-blend-screen filter blur-[100px] animate-blob animation-delay-2000"></div>
+        <div class="absolute bottom-[-20%] left-[20%] w-[600px] h-[600px] bg-emerald-500/10 rounded-full mix-blend-screen filter blur-[150px] animate-blob animation-delay-4000"></div>
+    </div>
+
+    <!-- Navigation -->
+    <header class="fixed w-full top-0 z-50 glass-nav transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <!-- Logo -->
+                <div class="flex-shrink-0">
+                    <a href="#" class="font-heading font-bold text-2xl tracking-tighter text-white">
+                        <span id="nav-logo-name">Tamim</span><span class="text-primary">.</span>
+                    </a>
+                </div>
+                
+                <!-- Desktop Menu -->
+                <nav class="hidden md:block">
+                    <ul class="flex space-x-8 text-sm font-medium">
+                        <li><a href="#home" class="hover:text-primary transition-colors text-gray-300">Home</a></li>
+                        <li><a href="#about" class="hover:text-primary transition-colors text-gray-300">About</a></li>
+                        <li><a href="#services" class="hover:text-primary transition-colors text-gray-300">Services</a></li>
+                        <li><a href="#portfolio" class="hover:text-primary transition-colors text-gray-300">Portfolio</a></li>
+                        <li><a href="#contact" class="hover:text-primary transition-colors text-gray-300">Contact</a></li>
+                    </ul>
+                </nav>
+
+                <!-- CTA Button -->
+                <div class="hidden md:block">
+                    <a href="#contact" class="px-5 py-2.5 rounded-full border border-primary text-primary hover:bg-primary hover:text-darker transition-all duration-300 font-medium text-sm flex items-center gap-2">
+                        Let's Talk <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden">
+                    <button id="mobile-menu-btn" class="text-gray-300 hover:text-white focus:outline-none text-2xl">
+                        <i class="fa-solid fa-bars"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu (Hidden by default) -->
+        <div id="mobile-menu" class="hidden md:hidden glass-panel border-t-0 border-x-0">
+            <ul class="px-4 pt-2 pb-6 space-y-2 text-center">
+                <li><a href="#home" class="block px-3 py-3 text-base font-medium text-gray-300 hover:text-primary hover:bg-white/5 rounded-lg">Home</a></li>
+                <li><a href="#about" class="block px-3 py-3 text-base font-medium text-gray-300 hover:text-primary hover:bg-white/5 rounded-lg">About</a></li>
+                <li><a href="#services" class="block px-3 py-3 text-base font-medium text-gray-300 hover:text-primary hover:bg-white/5 rounded-lg">Services</a></li>
+                <li><a href="#portfolio" class="block px-3 py-3 text-base font-medium text-gray-300 hover:text-primary hover:bg-white/5 rounded-lg">Portfolio</a></li>
+                <li><a href="#contact" class="block px-3 py-3 text-base font-medium text-primary hover:bg-white/5 rounded-lg">Contact</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="min-h-screen flex items-center justify-center pt-20 relative overflow-hidden">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8 w-full">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                
+                <!-- Hero Content -->
+                <div class="order-2 lg:order-1 text-center lg:text-left z-10 reveal">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full glass-panel text-xs text-primary font-medium mb-6">
+                        <span class="relative flex h-2 w-2">
+                          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+                          <span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+                        </span>
+                        Available for new projects
+                    </div>
+                    <h1 class="font-heading text-4xl sm:text-5xl lg:text-7xl font-bold leading-tight mb-4">
+                        Hi, I'm <br/>
+                        <span class="text-gradient" id="hero-name">Name</span>
+                    </h1>
+                    <h2 class="text-xl sm:text-2xl text-gray-400 font-medium mb-6 h-8">
+                        I am a <span id="typing-text" class="text-primary border-r-2 border-primary pr-1"></span>
+                    </h2>
+                    <p class="text-gray-400 max-w-lg mx-auto lg:mx-0 mb-8 leading-relaxed" id="hero-desc">
+                        <!-- Injected via JS -->
+                    </p>
+                    
+                    <div class="flex flex-wrap gap-4 justify-center lg:justify-start">
+                        <a href="#portfolio" class="btn-popup-hover px-8 py-3.5 rounded-xl bg-primary text-darker font-semibold hover:bg-white transition-all duration-300 hover:-translate-y-1 shadow-[0_0_20px_rgba(85,250,233,0.3)]">
+                            View Projects
+                        </a>
+                        <a id="hero-cv-btn" href="#" target="_blank" class="btn-popup-hover px-8 py-3.5 rounded-xl bg-primary text-darker font-semibold hover:bg-white transition-all duration-300 hover:-translate-y-1 shadow-[0_0_20px_rgba(85,250,233,0.3)]">
+                            Download CV
+                        </a>
+                    </div>
+                    
+                    <!-- Social Links dynamically generated -->
+                    <div class="mt-10 flex gap-4 justify-center lg:justify-start" id="hero-socials"></div>
+                </div>
+
+                <!-- Hero Image -->
+                <div class="order-1 lg:order-2 flex justify-center lg:justify-end relative reveal">
+                    <div class="absolute inset-0 bg-gradient-to-tr from-primary/20 to-transparent rounded-full blur-2xl transform scale-75"></div>
+                    
+                    <div class="relative w-72 h-72 sm:w-96 sm:h-96 rounded-full glass-panel p-3 animate-float hover-glow z-10 flex items-center justify-center">
+                        <div class="absolute inset-0 rounded-full border-2 border-dashed border-primary/30 animate-[spin_15s_linear_infinite]"></div>
+
+                        <div class="w-full h-full rounded-full overflow-hidden border-[3px] border-primary/50 relative bg-darker">
+                             <img id="hero-image" src="" alt="Profile" class="w-full h-full object-cover object-top hover:scale-105 transition-transform duration-500">
+                        </div>
+                        
+                        <!-- Floating Badges -->
+                        <div class="absolute -bottom-6 -left-6 glass-panel px-4 py-3 rounded-xl flex items-center gap-3 animate-bounce" style="animation-duration: 3s;">
+                            <i class="fa-solid fa-wand-magic-sparkles text-3xl text-purple-400"></i>
+                            <div>
+                                <p class="text-xs text-gray-400">Expertise in</p>
+                                <p class="text-sm font-bold text-white">Visual Art</p>
+                            </div>
+                        </div>
+                        <div class="absolute -top-6 -right-6 glass-panel px-4 py-3 rounded-xl flex items-center gap-3 animate-bounce" style="animation-duration: 4s;">
+                            <i class="fa-solid fa-bezier-curve text-3xl text-primary"></i>
+                            <div>
+                                <p class="text-xs text-gray-400">Mastery in</p>
+                                <p class="text-sm font-bold text-white">Product Design</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- About & Skills Section -->
+    <section id="about" class="py-24 relative">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="text-center mb-16 reveal">
+                <h2 class="font-heading text-3xl md:text-5xl font-bold mb-4">About <span class="text-primary">Me</span></h2>
+                <div class="w-20 h-1 bg-gradient-to-r from-primary to-transparent mx-auto rounded-full"></div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16">
+                <!-- About Text -->
+                <div class="reveal glass-panel p-8 rounded-2xl">
+                    <h3 class="text-2xl font-semibold mb-4 text-white">Who am I?</h3>
+                    <p class="text-gray-400 leading-relaxed mb-6" id="about-text-1"></p>
+                    <p class="text-gray-400 leading-relaxed mb-8" id="about-text-2"></p>
+                    
+                    <div class="grid grid-cols-2 gap-6">
+                        <div class="border-l-2 border-primary pl-4">
+                            <h4 class="text-3xl font-bold text-white" id="stat-experience">0</h4>
+                            <p class="text-sm text-gray-400 uppercase tracking-wider">Years Experience</p>
+                        </div>
+                        <div class="border-l-2 border-primary pl-4">
+                            <h4 class="text-3xl font-bold text-white" id="stat-projects">0</h4>
+                            <p class="text-sm text-gray-400 uppercase tracking-wider">Projects Completed</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Skills -->
+                <div class="reveal">
+                    <h3 class="text-2xl font-semibold mb-6 text-white">My Toolkit <span class="text-sm font-normal text-gray-500 ml-2">(Click to view details)</span></h3>
+                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-4" id="skills-container">
+                        <!-- Skills injected via JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skill Detail Modal -->
+    <div id="skill-modal" class="fixed inset-0 z-[100] flex items-center justify-center px-4 skill-modal-overlay bg-black/60">
+        <div class="glass-panel w-full max-w-lg rounded-2xl p-6 relative skill-modal-content border-primary/30 shadow-[0_0_40px_rgba(70,240,223,0.1)]">
+            <!-- Close Button -->
+            <button id="close-modal-btn" class="absolute top-4 right-4 text-gray-400 hover:text-white hover:bg-white/10 w-8 h-8 rounded-full flex items-center justify-center transition-colors">
+                <i class="fa-solid fa-times text-xl"></i>
+            </button>
+            
+            <div class="flex items-center gap-4 mb-6 mt-2">
+                <div id="modal-skill-icon-container" class="w-14 h-14 rounded-xl bg-white/5 flex items-center justify-center border border-white/10">
+                    <i id="modal-skill-icon" class="fa-solid text-3xl"></i>
+                </div>
+                <div>
+                    <h3 id="modal-skill-title" class="text-2xl font-bold text-white font-heading">Skill Name</h3>
+                    <p class="text-sm text-primary font-medium tracking-wide">Expertise Area</p>
+                </div>
+            </div>
+            
+            <div class="space-y-4">
+                <p id="modal-skill-desc" class="text-gray-300 leading-relaxed text-sm">
+                    Description goes here.
+                </p>
+                
+                <div class="pt-4 border-t border-white/10">
+                    <h4 class="text-white font-semibold mb-2 text-sm">Key Capabilities:</h4>
+                    <ul id="modal-skill-features" class="space-y-2 text-sm text-gray-400">
+                        <!-- Features injected here -->
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="mt-8">
+                 <button id="modal-action-btn" class="w-full py-3 rounded-xl bg-white/10 text-white font-semibold hover:bg-primary hover:text-darker transition-all duration-300">
+                     Got it
+                 </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Services Section -->
+    <section id="services" class="py-24 relative bg-black/10">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="text-center mb-16 reveal">
+                <h2 class="font-heading text-3xl md:text-5xl font-bold mb-4">My <span class="text-primary">Services</span></h2>
+                <div class="w-20 h-1 bg-gradient-to-r from-primary to-transparent mx-auto rounded-full mb-4"></div>
+                <p class="text-gray-400">Click on any service to order or discuss on Fiverr.</p>
+            </div>
+
+            <!-- Services Dynamic Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="services-container">
+                <!-- Injected via JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Image Lightbox Modal for Portfolio -->
+    <div id="image-modal" class="fixed inset-0 z-[110] flex items-center justify-center bg-white opacity-0 pointer-events-none transition-opacity duration-300">
+        <button id="close-image-modal" class="absolute top-6 right-6 text-darker hover:text-primary transition-colors text-4xl w-12 h-12 flex items-center justify-center rounded-full bg-gray-200 hover:bg-gray-300 z-50 shadow-sm">
+            <i class="fa-solid fa-times"></i>
+        </button>
+        <div id="image-modal-content" class="relative max-w-5xl w-full max-h-[90vh] p-4 flex justify-center items-center transform scale-95 transition-transform duration-300">
+            <img id="modal-full-image" src="" alt="Full Preview" class="max-w-full max-h-[85vh] object-contain bg-white p-4 rounded-xl shadow-2xl border border-gray-200">
+        </div>
+    </div>
+
+    <!-- Portfolio Section -->
+    <section id="portfolio" class="py-24 relative bg-black/20">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="text-center mb-16 reveal">
+                <h2 class="font-heading text-3xl md:text-5xl font-bold mb-4">Featured <span class="text-primary">Projects</span></h2>
+                <div class="w-20 h-1 bg-gradient-to-r from-primary to-transparent mx-auto rounded-full mb-4"></div>
+                <p class="text-gray-400">Hover over the image to preview the full page.</p>
+            </div>
+
+            <!-- Dynamic Portfolio Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="portfolio-container">
+                <!-- Portfolio Cards injected via JS -->
+            </div>
+            
+            <div class="text-center mt-12 reveal">
+                <a href="#" class="inline-flex items-center gap-2 text-primary hover:text-white transition-colors">
+                    View More on Dribbble <i class="fa-brands fa-dribbble"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact & Map Section -->
+    <section id="contact" class="py-24 relative">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="text-center mb-16 reveal">
+                <h2 class="font-heading text-3xl md:text-5xl font-bold mb-4">Get In <span class="text-primary">Touch</span></h2>
+                <div class="w-20 h-1 bg-gradient-to-r from-primary to-transparent mx-auto rounded-full"></div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+                <!-- Contact Info -->
+                <div class="lg:col-span-5 space-y-6 reveal">
+                    <div class="glass-panel p-6 rounded-2xl flex items-start gap-4 hover-glow">
+                        <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary text-xl flex-shrink-0">
+                            <i class="fa-solid fa-location-dot"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-lg font-semibold text-white mb-1">Location</h4>
+                            <p class="text-gray-400" id="contact-location"></p>
+                        </div>
+                    </div>
+                    
+                    <div class="glass-panel p-6 rounded-2xl flex items-start gap-4 hover-glow">
+                        <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary text-xl flex-shrink-0">
+                            <i class="fa-solid fa-envelope"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-lg font-semibold text-white mb-1">Email</h4>
+                            <a href="#" class="text-gray-400 hover:text-primary transition-colors" id="contact-email"></a>
+                        </div>
+                    </div>
+
+                    <div class="glass-panel p-6 rounded-2xl flex items-start gap-4 hover-glow">
+                        <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary text-xl flex-shrink-0">
+                            <i class="fa-solid fa-phone"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-lg font-semibold text-white mb-1">Phone / WhatsApp</h4>
+                            <a href="#" class="text-gray-400 hover:text-primary transition-colors" id="contact-phone"></a>
+                        </div>
+                    </div>
+
+                    <!-- Map -->
+                    <div class="glass-panel p-2 rounded-2xl h-64 overflow-hidden mt-6 relative hover-glow">
+                        <div id="map-container" class="w-full h-full rounded-xl overflow-hidden">
+                           <!-- Iframe injected via JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contact Form -->
+                <div class="lg:col-span-7 reveal">
+                    <form id="contactForm" class="glass-panel p-8 rounded-2xl space-y-6">
+                        <h3 class="text-2xl font-semibold text-white mb-2">Send a Message</h3>
+                        <p class="text-gray-400 text-sm mb-6">Let's discuss your next project.</p>
+                        
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                            <div class="space-y-2">
+                                <label class="text-sm font-medium text-gray-300">Your Name</label>
+                                <input type="text" name="name" required class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-primary focus:bg-white/10 transition-all">
+                            </div>
+                            <div class="space-y-2">
+                                <label class="text-sm font-medium text-gray-300">Your Email</label>
+                                <input type="email" name="email" required class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-primary focus:bg-white/10 transition-all">
+                            </div>
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-sm font-medium text-gray-300">Subject</label>
+                            <input type="text" name="subject" required class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-primary focus:bg-white/10 transition-all">
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-sm font-medium text-gray-300">Message</label>
+                            <textarea name="message" rows="5" required class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-primary focus:bg-white/10 transition-all resize-none"></textarea>
+                        </div>
+                        <button type="submit" class="w-full py-4 rounded-xl bg-primary text-darker font-bold uppercase tracking-wider hover:bg-white transition-all duration-300 flex justify-center items-center gap-2">
+                            Send Message <i class="fa-solid fa-paper-plane"></i>
+                        </button>
+                        <p id="form-status" class="text-sm text-center hidden"></p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="border-t border-white/10 bg-black/40 py-8 text-center relative z-10">
+        <div class="max-w-7xl mx-auto px-6">
+            <p class="text-gray-400 text-sm">
+                &copy; <span id="current-year"></span> <span id="footer-name" class="text-white font-semibold"></span>. All rights reserved.<br>
+                <span class="text-xs text-gray-500 mt-1 block">Designed according to UI/UX Trends.</span>
+            </p>
+        </div>
+    </footer>
+
+
+    <!-- ==========================================
+         DYNAMIC CONFIGURATION (UPDATE DATA HERE)
+         ========================================== -->
+    <script>
+        const CONFIG = {
+            profile: {
+                name: "Tamim Chowdhury",
+                firstName: "Tamim",
+                role: "Visual Artist & Designer",
+                typingTexts: ["Graphic Designer.", "Visual Artist.", "UI/UX Expert.", "AI Design Specialist.", "Creative Brand Identity Maker."],
+                description: "I am a professional Graphic Designer and Visual Artist specializing in AI-driven creativity and modern UI/UX design. I craft highly optimized, visually stunning, and impactful digital experiences that elevate your brand to the next standard.",
+                image: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhfZEOlgbBzpvinw7ZX5SIheRHXJ0XomVquzuY4TBbS6S7SQto2ffqWoscNQjEeSH2WatrUYKkjfOUOJeo2W0uQtrd-_rtQSn3_3mzjqlJcweHfdN93D0rgcrEAjWIKefeTyvAslZweorRYogAuRol1eeI2uaG7I2zTvr1Mj_lwhGVES8xZr8tlAzhc84Eh/s320/profile.png",
+                cvLink: "https://drive.google.com/file/d/17zs6nZk5IMf3BExrar2oEMa7eBHgyCSd/view?usp=drive_link",
+                
+                // About section paragraphs
+                about1: "Hello! I am Tamim Chowdhury, a passionate and experienced Graphic Designer based in Gopalgonj Sadar. I specialize in bridging the gap between beautiful modern design and strategic visual communication. With a deep understanding of core design principles and AI tools, I deliver premium digital assets.",
+                about2: "My primary arsenal includes Graphic Design, creating robust brand identities, UI/UX conceptualization, and leveraging Visual Arts with AI to produce extraordinary results. Let's collaborate to build something stunning for your modern brand.",
+                
+                experienceYears: "5+",
+                projectsDone: "120+",
+            },
+            contact: {
+                phone: "01960376510",
+                email: "tammimchowdhury949@gmail.com",
+                location: "Gopalgonj Sadar, Bangladesh",
+                mapUrl: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d116834.00977785532!2d89.77490352220455!3d23.003612502640248!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1m1s0x39fa0411a768c34f%3A0xa1939dbef9d7f023!2sGopalganj%20Sadar%20Upazila!5e0!3m2!1sen!2sbd!4v1716912345678!5m2!1sen!2sbd"
+            },
+            fiverrLink: "https://www.fiverr.com/s/WE5Ey8R",
+            socials: [
+                { icon: "fa-behance", url: "https://www.behance.net/tammimchowdhury" },
+                { icon: "fa-linkedin-in", url: "https://www.linkedin.com/in/md-tamim-chowdhury-a1aa38379/" },
+                { icon: "fa-instagram", url: "https://www.instagram.com/rktammimchowdhury/" }
+            ],
+            services: [
+                {
+                    title: "Brand Identity & Logo Design",
+                    icon: "fa-fingerprint",
+                    color: "text-emerald-400",
+                    desc: "Premium, timeless logo design and comprehensive brand books including typography, grids, and brand guidelines to uniquely stand out."
+                },
+                {
+                    title: "Social Media & Thumbnail Graphics",
+                    icon: "fa-hashtag",
+                    color: "text-blue-400",
+                    desc: "High-conversion YouTube thumbnails, strategic Instagram/Facebook ad creatives, and daily banners targeted to grow your audience."
+                },
+                {
+                    title: "Visual Arts & AI Generation",
+                    icon: "fa-wand-magic-sparkles",
+                    color: "text-purple-400",
+                    desc: "Advanced generative AI creations combined with expert Photoshop compositing to create mind-blowing conceptual digital artwork."
+                },
+                {
+                    title: "Print & Commercial Editorial Design",
+                    icon: "fa-box-open",
+                    color: "text-orange-400",
+                    desc: "High-resolution corporate brochures, premium packaging design, event posters, custom flyers, and print-ready production files."
+                },
+                {
+                    title: "UI/UX & High-Fidelity Prototyping",
+                    icon: "fa-bezier-curve",
+                    color: "text-cyan-400",
+                    desc: "Stunning web and mobile user interface concepts focused on extreme conversion, elegant visual layout hierarchies, and smooth interactions."
+                },
+                {
+                    title: "Advanced Photo Compositing",
+                    icon: "fa-image",
+                    color: "text-yellow-400",
+                    desc: "High-end product mockup placement, precision background replacement, detailed color grading, skin retouching, and restoration layout assets."
+                }
+            ],
+            skills: [
+                { 
+                    id: "graphic-design",
+                    name: "Graphic Design", 
+                    icon: "fa-pen-nib text-blue-400",
+                    description: "Crafting visually compelling designs that communicate your brand's message effectively. From marketing materials to digital assets, I ensure high-quality and pixel-perfect results.",
+                    features: ["Logo & Brand Identity", "Social Media Graphics", "Print Materials (Flyers, Brochures)", "Digital Illustrations"]
+                },
+                { 
+                    id: "ai-art",
+                    name: "Visual Art with AI", 
+                    icon: "fa-wand-magic-sparkles text-purple-500",
+                    description: "Leveraging cutting-edge AI tools to generate unique, high-fidelity visual concepts. I blend traditional design sensibilities with generative AI to push creative boundaries.",
+                    features: ["Midjourney Prompts & Generation", "AI Image Manipulation", "Concept Art Development", "Custom AI Workflows"]
+                },
+                { 
+                    id: "brand-identity",
+                    name: "Brand Identity", 
+                    icon: "fa-fingerprint text-yellow-400",
+                    description: "Developing cohesive and memorable brand identities that resonate with your target audience. I build brand systems that scale across all touchpoints.",
+                    features: ["Brand Guidelines Creation", "Typography & Color Palettes", "Visual System Design", "Brand Strategy Consultancy"]
+                },
+                { 
+                    id: "photoshop",
+                    name: "Adobe Photoshop", 
+                    icon: "fa-image text-teal-400",
+                    description: "Expert-level image editing, manipulation, and retouching using Adobe Photoshop. I can transform raw images into stunning visual masterpieces.",
+                    features: ["Advanced Photo Retouching", "Complex Image Compositing", "Color Correction & Grading", "Mockup Creation"]
+                },
+                { 
+                    id: "illustrator",
+                    name: "Adobe Illustrator", 
+                    icon: "fa-vector-square text-orange-500",
+                    description: "Creating scalable vector graphics using Adobe Illustrator. Perfect for logos, icons, typography, and complex illustrations that need to remain crisp at any size.",
+                    features: ["Vector Illustration", "Custom Icon Design", "Typography Layouts", "Print-Ready Vector Files"]
+                }
+            ],
+            portfolio: [
+                {
+                    title: "Modern Corporate Agency",
+                    category: "Social Media Design",
+                    image: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiympll2ndZe8Wt-CjFmsGrKetdTvX4fp2BIHMHw0tF03sG9nZB2ytswUzJtu1kRpvHgKUSLOD00UEfWeNbNarmCjXXGPyQkOGx1Jx2PnoywhxVKDv5D9VJpuoGiOxeuFbYnVyXjWr4RZPzU3d7oSIwt1pz4JLKufhE451sh9gv1uSElVfSGNYEqXWkE4gv/s320/4.jpg",
+                    liveUrl: "#",
+                    gitUrl: "#"
+                },
+                {
+                    title: "Food menu",
+                    category: "social media Design",
+                    image: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhSZNJiaI-eRYZDV2XpP3Vwk_0zlPExtZ_iQjTXePc0DkUN05SoCMyhmrE77XOnQa-W0iiO6ol-qm25ziERlG8hUky8A0zwFWdPlecunnX9E-nSlmClblMnNTDgoEgN7SOa_RWXojO8AsKfZo1E2bLlvUThRVec57oUM4NW0-pJcJHAlMum-IPZxGG7O4zD/s320/Flyer%20Mock%20Up_01.jpg",
+                    liveUrl: "#",
+                    gitUrl: "#"
+                },
+                {
+                    title: "Thumbnail",
+                    category: "Social Media Design",
+                    image: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEh3NxEmc8KV0iFJCtXshH5B2NsScKazzHjFh8PohLBSU_GQY2DsaM45bkSIUgQfUBucC5isKok84Xs4D_gqZ8Wqn_1S1aRwqru6Ul_cW5EjBXRGbP3ZRi6K97K-YAiRL4n7qRlGn5wXfsGruFKCwjaaA7Ai2Al668nQV-vsbN2mwvaE9ao0V7kbAnabFNge/s320/Grow%20your%20chanele%20thamnail.png",
+                    liveUrl: "#",
+                    gitUrl: "#"
+                },
+                {
+                    title: "Thumbnail",
+                    category: "Social Media Design",
+                    image: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi9QXTQFovZf1pNy1Hbi4GKqoEvD8R6Cvjff9BpdGs6jC_N8tbLnkGgQPgtZdLaSHpU0cEOFKVasi6eC6H7vyZVxYb5k09Kf0fmnPCUOjQRxoWU-DpR59BKJlcY0CQvwK1uvjOXQR1VxQu6JvehKFv10RtAdPNosbNGaPDr5gGTysmpthtpQCwrZMYOKw89/s320/best%20ai%20tool.png",
+                    liveUrl: "#",
+                    gitUrl: "#"
+                },
+                {
+                    title: "Thumbnail",
+                    category: "Social Media Design",
+                    image: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhq-kyLuBhnicifRexcLLZ5fljWWGec3BqhpBSrIZGztUr84Vfgr8cPuwWfLdhv51oYggxAtv5fpJjQmOXumD2uush5PtjPrJvWJsPVKEpV-w88I2ibFYWmr7C4wNbulTYDF09XsaW6Q0B9HzrRYzilESFyUhkJPRo0Qb1XC3nutlW-dk8ujaUNsAl7IMgo/s320/best%20softoyar.png",
+                    liveUrl: "#",
+                    gitUrl: "#"
+                },
+                {
+                    title: "Logo Design",
+                    category: "Brand Identity",
+                    image: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEh2cYjrHloOOCnu4Ia94oRVoLq-xLWggHCyut8D8oRZFtLhyAVSwayEHqDLiBj37YorM9-meAFuNJXOSHI2Ty9AqvjivqEmoAbQ_znMcHEl6FHdixofXVHmRSujWC7riRN_Vc3HzYGYdUzDyKmtv4aGIy8DUZ7lbaURQVRYyrSJTTlWo5vPCB_i871g5gS7/s320/ilmun%20najat%20logo.png",
+                    liveUrl: "#",
+                    gitUrl: "#"
+                },
+                {
+                    title: "Arabic Certificate Design",
+                    category: "Certificate Design",
+                    image: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiMhAZ6DyGEkHaqS8fMYKQJevST_YBlgr2ot2KVMUr_8stwK-3Ug82_urLCpI27DLA8hDQKpahyUOGMXK4cCfejcjtNhe7Qj2JquGvjaylLfA02uGNh9XFEOsMM5cHDSEaqfTUB0QwmRU952VDntLCMO2t06ev_6xkTVepnuKizThhBvQQPyQXvTBezCjqr/s320/cresh-01-01.png",
+                    liveUrl: "#",
+                    gitUrl: "#"
+                }
+            ],
+            api: {
+                telegramBotToken: "", 
+                telegramChatId: "",
+                googleScriptUrl: "" 
+            }
+        };
+
+        // ==========================================
+        // SYSTEM LOGIC (DO NOT EDIT BELOW UNLESS NEEDED)
+        // ==========================================
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Populate Basic Data
+            document.title = `${CONFIG.profile.name} | Premium Designer & Visual Artist`;
+            document.getElementById('nav-logo-name').textContent = CONFIG.profile.firstName;
+            document.getElementById('hero-name').textContent = CONFIG.profile.name;
+            document.getElementById('hero-desc').textContent = CONFIG.profile.description;
+            document.getElementById('hero-image').src = CONFIG.profile.image;
+            document.getElementById('hero-cv-btn').href = CONFIG.profile.cvLink;
+            
+            // Populate About
+            document.getElementById('about-text-1').textContent = CONFIG.profile.about1;
+            document.getElementById('about-text-2').textContent = CONFIG.profile.about2;
+            document.getElementById('stat-experience').textContent = CONFIG.profile.experienceYears;
+            document.getElementById('stat-projects').textContent = CONFIG.profile.projectsDone;
+            
+            // Populate Contact
+            document.getElementById('contact-location').textContent = CONFIG.contact.location;
+            
+            const emailEl = document.getElementById('contact-email');
+            emailEl.textContent = CONFIG.contact.email;
+            emailEl.href = `mailto:${CONFIG.contact.email}`;
+            
+            const phoneEl = document.getElementById('contact-phone');
+            phoneEl.textContent = CONFIG.contact.phone;
+            // WhatsApp Click Action Link Injection
+            phoneEl.href = "https://wa.me/88" + CONFIG.contact.phone.replace(/^0+/, ''); 
+            phoneEl.target = "_blank";
+
+            // Populate Map
+            const mapHtml = `<iframe src="${CONFIG.contact.mapUrl}" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" class="rounded-xl"></iframe>`;
+            document.getElementById('map-container').innerHTML = mapHtml;
+
+            // Populate Footer
+            document.getElementById('current-year').textContent = new Date().getFullYear();
+            document.getElementById('footer-name').textContent = CONFIG.profile.name;
+
+            // Generate Social Links
+            const socialsContainer = document.getElementById('hero-socials');
+            CONFIG.socials.forEach(social => {
+                const a = document.createElement('a');
+                a.href = social.url;
+                a.target = "_blank";
+                a.className = "w-11 h-11 rounded-full glass-panel flex items-center justify-center text-gray-300 hover:text-primary hover:border-primary/50 transition-all duration-300 hover:-translate-y-1";
+                a.innerHTML = `<i class="fa-brands ${social.icon} text-lg"></i>`;
+                socialsContainer.appendChild(a);
+            });
+
+            // Generate Services Grid Cards linked directly to Fiverr link
+            const servicesContainer = document.getElementById('services-container');
+            CONFIG.services.forEach(srv => {
+                const aCard = document.createElement('a');
+                aCard.href = CONFIG.fiverrLink;
+                aCard.target = "_blank";
+                aCard.className = "glass-panel p-8 rounded-2xl block hover-glow group transition-all duration-300 relative overflow-hidden";
+                aCard.innerHTML = `
+                    <div class="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-primary/10 to-transparent rounded-bl-full pointer-events-none transition-transform group-hover:scale-110"></div>
+                    <div class="w-14 h-14 rounded-xl bg-white/5 flex items-center justify-center border border-white/10 mb-6 group-hover:scale-110 group-hover:border-primary/30 transition-all duration-300">
+                        <i class="fa-solid ${srv.icon} text-2xl ${srv.color}"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-3 group-hover:text-primary transition-colors font-heading">${srv.title}</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed mb-4">${srv.desc}</p>
+                    <div class="inline-flex items-center gap-2 text-xs font-semibold text-primary uppercase tracking-wider group-hover:gap-3 transition-all">
+                        Order on Fiverr <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                    </div>
+                `;
+                servicesContainer.appendChild(aCard);
+            });
+
+            // --- Skill Modal Logic Setup ---
+            const skillModal = document.getElementById('skill-modal');
+            const closeModalBtn = document.getElementById('close-modal-btn');
+            const actionModalBtn = document.getElementById('modal-action-btn');
+            const modalTitle = document.getElementById('modal-skill-title');
+            const modalDesc = document.getElementById('modal-skill-desc');
+            const modalIcon = document.getElementById('modal-skill-icon');
+            const modalFeatures = document.getElementById('modal-skill-features');
+
+            function openModal(skillId) {
+                const skill = CONFIG.skills.find(s => s.id === skillId);
+                if (!skill) return;
+
+                modalTitle.textContent = skill.name;
+                modalDesc.textContent = skill.description;
+                modalIcon.className = `fa-solid ${skill.icon} text-3xl`;
+                
+                modalFeatures.innerHTML = '';
+                skill.features.forEach(feature => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `<i class="fa-solid fa-check text-primary mr-2 text-xs"></i> ${feature}`;
+                    modalFeatures.appendChild(li);
+                });
+
+                skillModal.classList.add('active');
+                document.body.classList.add('modal-open');
+            }
+
+            function closeModal() {
+                skillModal.classList.remove('active');
+                document.body.classList.remove('modal-open');
+            }
+
+            closeModalBtn.addEventListener('click', closeModal);
+            actionModalBtn.addEventListener('click', closeModal);
+            skillModal.addEventListener('click', (e) => {
+                if(e.target === skillModal) closeModal();
+            });
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && skillModal.classList.contains('active')) {
+                    closeModal();
+                }
+            });
+
+            // Generate Skills
+            const skillsContainer = document.getElementById('skills-container');
+            CONFIG.skills.forEach(skill => {
+                const div = document.createElement('div');
+                div.className = "glass-panel p-4 rounded-xl flex items-center gap-4 hover-glow group cursor-pointer transition-all duration-300 hover:bg-white/5";
+                div.setAttribute('data-skill-id', skill.id);
+                div.innerHTML = `
+                    <div class="w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <i class="fa-solid ${skill.icon} text-xl"></i>
+                    </div>
+                    <span class="font-medium text-gray-200 group-hover:text-primary transition-colors">${skill.name}</span>
+                `;
+                div.addEventListener('click', () => openModal(skill.id));
+                skillsContainer.appendChild(div);
+            });
+
+            // Generate Portfolio Cards with Long Scroll Effect
+            const portfolioContainer = document.getElementById('portfolio-container');
+            CONFIG.portfolio.forEach(item => {
+                const card = document.createElement('div');
+                card.className = "portfolio-card glass-panel rounded-2xl p-4 hover-glow group flex flex-col";
+                card.innerHTML = `
+                    <div class="portfolio-img-wrapper mb-5">
+                        <img src="${item.image}" alt="${item.title}" class="portfolio-img-scroll">
+                        
+                        <!-- Overlay action buttons -->
+                        <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-4 backdrop-blur-sm z-10">
+                            <button class="view-img-btn w-12 h-12 bg-primary rounded-full flex items-center justify-center text-darker hover:scale-110 transition-transform cursor-pointer" data-img="${item.image}" title="View Full Image">
+                                <i class="fa-solid fa-eye"></i>
+                            </button>
+                            <a href="${item.gitUrl}" target="_blank" class="w-12 h-12 bg-white/20 border border-white/50 rounded-full flex items-center justify-center text-white hover:bg-white hover:text-darker transition-all" title="View Source">
+                                <i class="fa-solid fa-link"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="mt-auto">
+                        <span class="text-xs text-primary uppercase tracking-wider font-semibold mb-2 block">${item.category}</span>
+                        <h3 class="text-xl font-bold text-white group-hover:text-primary transition-colors">${item.title}</h3>
+                    </div>
+                `;
+                portfolioContainer.appendChild(card);
+            });
+
+            // --- Image Lightbox Modal Logic ---
+            const imageModal = document.getElementById('image-modal');
+            const modalFullImage = document.getElementById('modal-full-image');
+            const closeImageModalBtn = document.getElementById('close-image-modal');
+            const imageModalContent = document.getElementById('image-modal-content');
+
+            function openImageModal(imgSrc) {
+                modalFullImage.src = imgSrc;
+                imageModal.classList.remove('opacity-0', 'pointer-events-none');
+                imageModalContent.classList.remove('scale-95');
+                imageModalContent.classList.add('scale-100');
+                document.body.classList.add('modal-open');
+            }
+
+            function closeImageModal() {
+                imageModal.classList.add('opacity-0', 'pointer-events-none');
+                imageModalContent.classList.remove('scale-100');
+                imageModalContent.classList.add('scale-95');
+                document.body.classList.remove('modal-open');
+                setTimeout(() => { modalFullImage.src = ""; }, 300);
+            }
+
+            document.querySelectorAll('.view-img-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    openImageModal(this.getAttribute('data-img'));
+                });
+            });
+
+            closeImageModalBtn.addEventListener('click', closeImageModal);
+            imageModal.addEventListener('click', (e) => {
+                if (e.target === imageModal || e.target === imageModalContent) closeImageModal();
+            });
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && !imageModal.classList.contains('opacity-0')) {
+                    closeImageModal();
+                }
+            });
+
+            // Typing Effect Logic
+            const typingTextElement = document.getElementById("typing-text");
+            let textIndex = 0;
+            let charIndex = 0;
+            let isDeleting = false;
+
+            function typeEffect() {
+                const currentText = CONFIG.profile.typingTexts[textIndex];
+                
+                if (isDeleting) {
+                    typingTextElement.textContent = currentText.substring(0, charIndex - 1);
+                    charIndex--;
+                } else {
+                    typingTextElement.textContent = currentText.substring(0, charIndex + 1);
+                    charIndex++;
+                }
+
+                let typingSpeed = isDeleting ? 50 : 100;
+
+                if (!isDeleting && charIndex === currentText.length) {
+                    typingSpeed = 2000;
+                    isDeleting = true;
+                } else if (isDeleting && charIndex === 0) {
+                    isDeleting = false;
+                    textIndex = (textIndex + 1) % CONFIG.profile.typingTexts.length;
+                    typingSpeed = 500;
+                }
+
+                setTimeout(typeEffect, typingSpeed);
+            }
+            setTimeout(typeEffect, 1000);
+
+            // Scroll Reveal Animation Intersection Observer
+            const revealElements = document.querySelectorAll('.reveal');
+            const revealObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, {
+                threshold: 0.1,
+                rootMargin: "0px 0px -50px 0px"
+            });
+            
+            revealElements.forEach(el => revealObserver.observe(el));
+
+            // Mobile Menu Toggle
+            const menuBtn = document.getElementById('mobile-menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            
+            menuBtn.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+            
+            document.querySelectorAll('#mobile-menu a').forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenu.classList.add('hidden');
+                });
+            });
+
+            // Form Submission Handler
+            const form = document.getElementById('contactForm');
+            const statusMsg = document.getElementById('form-status');
+
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                statusMsg.classList.remove('hidden', 'text-red-400', 'text-green-400');
+                statusMsg.classList.add('text-primary');
+                statusMsg.textContent = "Sending message...";
+                
+                setTimeout(() => {
+                    statusMsg.classList.remove('text-primary');
+                    statusMsg.classList.add('text-green-400');
+                    statusMsg.textContent = "Message sent successfully! I will get back to you soon.";
+                    form.reset();
+                }, 1500);
+            });
+        });
+    </script>
+</body>
+</html>
